@@ -6,18 +6,8 @@ module.exports = {
   "password": process.env.TYPEORM_PASSWORD,
   "database": process.env.TYPEORM_DATABASE,
   "synchronize": true,
-  "logging": true,
+  "logging": false,
   "entities": [
     "dist/**/*.entity{.ts,.js}"
-    // process.env.NODE_ENV === 'development' ?
-    //   "src/**/*.entity.ts" :
-    //   "dist/**/*.entity.js"
-  ],
-  // "migrations": ["src/migration/*.ts"],
-  // "subscribers": ["src/subscriber/**/*.ts"],
-  // "cli": {
-  //   "entitiesDir": "src/models",
-  //   "migrationsDir": "src/migration",
-  //   "subscribersDir": "src/subscriber"
-  // }
+  ]
 }

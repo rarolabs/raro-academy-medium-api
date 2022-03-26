@@ -1,0 +1,11 @@
+version: '3'
+services:
+  db:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: medium_app_dev
+      MYSQL_USER: medium_dev
+      MYSQL_PASSWORD: 6fc0e76c-d99e-4d25-9ce4-f287c982a8ca
+    ports:
+      - "3306:3306"

@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsuariosModule } from './usuarios/usuarios.module';
 import { ArtigosModule } from './artigos/artigos.module';
+import { AuthModule } from './auth/auth.module';
+import { SharedModule } from './shared/shared.module';
 
 @Module({
   imports: [
@@ -12,9 +12,9 @@ import { ArtigosModule } from './artigos/artigos.module';
     TypeOrmModule.forRoot(),
     UsuariosModule,
     ArtigosModule,
-  ],
-  controllers: [AppController],
-  providers: [AppService],
+    AuthModule,
+    SharedModule,
+  ]
 })
 export class AppModule {
 }

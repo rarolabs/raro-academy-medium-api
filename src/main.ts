@@ -8,7 +8,12 @@ async function bootstrap() {
     .setTitle('medium example')
     .setDescription('The medium API description')
     .setVersion('1.0')
-    .addTag('medium')
+    // .addTag('medium')
+    .addBearerAuth({
+      type: 'apiKey',
+      in: 'header',
+      name: 'Authorization',
+    })
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-docs', app, document);

@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode, UseGuards, Req } from '@nestjs/common';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ArtigosService } from './artigos.service';
 import { CreateArtigoDto } from './dto/create-artigo.dto';
 import { UpdateArtigoDto } from './dto/update-artigo.dto';
@@ -7,6 +8,8 @@ import { Artigo } from './entities/artigo.entity';
 
 @ApiTags('artigos')
 @Controller('artigos')
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
 export class ArtigosController {
   constructor(private readonly artigosService: ArtigosService) {}
 

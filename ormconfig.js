@@ -6,7 +6,7 @@ module.exports = {
   "password": process.env.TYPEORM_PASSWORD,
   "database": process.env.TYPEORM_DATABASE,
   "synchronize": true,
-  "logging": false,
+  "logging": true,
   "entities": [
     "dist/**/*.entity{.ts,.js}"
     // process.env.NODE_ENV === 'development' ?

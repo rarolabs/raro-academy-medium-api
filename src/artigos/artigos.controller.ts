@@ -8,13 +8,13 @@ import { Artigo } from './entities/artigo.entity';
 
 @ApiTags('artigos')
 @Controller('artigos')
-@UseGuards(JwtAuthGuard)
-@ApiBearerAuth()
 export class ArtigosController {
   constructor(private readonly artigosService: ArtigosService) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   create(@Body() createArtigoDto: CreateArtigoDto) {
     return this.artigosService.create(createArtigoDto);
   }
@@ -26,6 +26,15 @@ export class ArtigosController {
     return this.artigosService.findAll();
   }
 
+  @Get('meus-artigos')
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({ isArray: true, type: Artigo })
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  findMine(): Promise<Artigo[]> {
+    return this.artigosService.findMine();
+  }
+
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ type: Artigo })
@@ -35,12 +44,16 @@ export class ArtigosController {
 
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   update(@Param('id') id: string, @Body() updateArtigoDto: UpdateArtigoDto) {
     return this.artigosService.update(+id, updateArtigoDto);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   async remove(@Param('id') id: string): Promise<void> {
     await this.artigosService.remove(+id);
   }

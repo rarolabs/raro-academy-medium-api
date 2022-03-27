@@ -13,26 +13,35 @@ export class ArtigosService {
     @Inject(REQUEST) private readonly request: any,
   ) {}
   
-  // @todo: por agora, o arquivo funciona como base-64. Verificar se é complicado
-  // transformar em um upload.
   create(createArtigoDto: CreateArtigoDto) {
-    return this.artigosRepo.create(createArtigoDto);
+    return this.artigosRepo.save(this.mapArtigo(createArtigoDto));
   }
 
   findAll() {
     return this.artigosRepo.find({
-      where: { autor: { id: this.request.user.id, } }
+      select: ['id', 'titulo', 'resumo', 'imagem'],
+      relations: [ 'autor' ]
+    });
+  }
+
+  findMine() {
+    return this.artigosRepo.find({
+      select: ['id', 'titulo', 'resumo', 'imagem'],
+      where: { autor: { id: this.request.user.id, } },
+      relations: [ 'autor' ]
     });
   }
 
   findOne(id: number) {
     return this.artigosRepo.findOne({
-      where: { id, autor: { id: this.request.user.id } }
+      where: { id },
+      relations: [ 'autor' ]
     });
   }
 
-  update(id: number, updateArtigoDto: UpdateArtigoDto) {
-    return this.artigosRepo.update(id, updateArtigoDto);
+  async update(id: number, updateArtigoDto: UpdateArtigoDto) {
+    await this.artigosRepo.update(id, updateArtigoDto);
+    return this.findOne(id);
   }
 
   remove(id: number) {
@@ -40,5 +49,16 @@ export class ArtigosService {
       id,
       autor: { id: this.request.user.id }
     });
+  }
+
+  private mapArtigo(createArtigoDto: CreateArtigoDto | UpdateArtigoDto) {
+    const artigo = new Artigo();
+    artigo.titulo = createArtigoDto.titulo;
+    artigo.conteudo = createArtigoDto.conteudo;
+    artigo.resumo = createArtigoDto.resumo;
+    artigo.imagem = createArtigoDto.imagem;
+    artigo.autor = this.request.user;
+
+    return artigo;
   }
 }

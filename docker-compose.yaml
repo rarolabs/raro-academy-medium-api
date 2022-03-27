@@ -16,5 +16,13 @@ services:
     environment:
       TYPEORM_HOST: db
     ports:
-      - "3000:3000"
+      - "3307:3000"
     command: npm run start:prod
+  app:
+    build: ../medium-app/
+    env_file:
+      - .env
+    environment:
+      TYPEORM_HOST: db
+    ports:
+      - "3308:80"

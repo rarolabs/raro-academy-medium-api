@@ -1,6 +1,7 @@
+import faker from "@faker-js/faker";
 import { ApiProperty } from "@nestjs/swagger";
 import { Usuario } from "src/usuarios/entities/usuario.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Artigo {
@@ -27,4 +28,13 @@ export class Artigo {
   @ApiProperty({ type: () => Usuario })
   @ManyToOne(() => Usuario, usuario => usuario.artigos)
   autor: Usuario;
+
+  @Column({ default: `${faker.datatype.number({ min: 1, max: 10 })} min` })
+  tempoDeLeitura: string;
+
+  @CreateDateColumn()
+  dataPublicacao: Date;
+
+  @UpdateDateColumn()
+  dataAtualizacao: Date;
 }

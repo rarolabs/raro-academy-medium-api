@@ -2,6 +2,7 @@ import faker from '@faker-js/faker';
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
+import { EdicaoDeArtigoNaoAutorizadaException } from 'src/exceptions/domain/EdicaoDeArtigoNaoAutorizada.error';
 import { Repository } from 'typeorm';
 import { CreateArtigoDto } from './dto/create-artigo.dto';
 import { UpdateArtigoDto } from './dto/update-artigo.dto';
@@ -41,15 +42,24 @@ export class ArtigosService {
   }
 
   async update(id: number, updateArtigoDto: UpdateArtigoDto) {
+    await this.verificaProprietarioDoArtigo(id);
     await this.artigosRepo.update(id, updateArtigoDto);
     return this.findOne(id);
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    await this.verificaProprietarioDoArtigo(id);
     return this.artigosRepo.delete({
       id,
       autor: { id: this.request.user.id }
     });
+  }
+
+  private async verificaProprietarioDoArtigo(id: number) {
+    const artigo = await this.findOne(id)
+    if (artigo.autor.id !== this.request.user.id) {
+      throw new EdicaoDeArtigoNaoAutorizadaException();
+    }
   }
 
   private mapArtigo(createArtigoDto: CreateArtigoDto | UpdateArtigoDto) {

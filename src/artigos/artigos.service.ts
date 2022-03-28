@@ -1,3 +1,4 @@
+import faker from '@faker-js/faker';
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -58,6 +59,7 @@ export class ArtigosService {
     artigo.resumo = createArtigoDto.resumo;
     artigo.imagem = createArtigoDto.imagem;
     artigo.autor = this.request.user;
+    artigo.tempoDeLeitura = `${faker.datatype.number({ min: 1, max: 10 })} min`
 
     return artigo;
   }

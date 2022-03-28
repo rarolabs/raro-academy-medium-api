@@ -5,6 +5,7 @@ import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { Usuario } from './entities/usuario.entity';
 import { SenhaService } from 'src/shared/senha.service';
 import { REQUEST } from '@nestjs/core';
+import faker from '@faker-js/faker';
 
 @Injectable({ scope: Scope.REQUEST })
 export class UsuariosService {
@@ -20,6 +21,7 @@ export class UsuariosService {
     usuario.login = createUsuarioDto.login;
     usuario.nome = createUsuarioDto.nome;
     usuario.senha = this.senhaService.hashSenha(createUsuarioDto.senha);
+    usuario.avatar = faker.image.avatar()
 
     return this.usuariosRepo.save(usuario);
   }

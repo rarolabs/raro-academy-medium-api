@@ -3,7 +3,7 @@ import { Inject, Injectable, Scope } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EdicaoDeArtigoNaoAutorizadaException } from 'src/exceptions/domain/EdicaoDeArtigoNaoAutorizada.error';
-import { Repository } from 'typeorm';
+import { Repository, Like } from 'typeorm';
 import { CreateArtigoDto } from './dto/create-artigo.dto';
 import { UpdateArtigoDto } from './dto/update-artigo.dto';
 import { Artigo } from './entities/artigo.entity';
@@ -19,18 +19,24 @@ export class ArtigosService {
     return this.artigosRepo.save(this.mapArtigo(createArtigoDto));
   }
 
-  findAll() {
+  findAll(titulo = '') {
     return this.artigosRepo.find({
       select: ['id', 'titulo', 'resumo', 'imagem'],
-      relations: [ 'autor' ]
+      relations: [ 'autor' ],
+      where: {
+        titulo: Like(`%${titulo}%`),
+      }
     });
   }
 
-  findMine() {
+  findMine(titulo = '') {
     return this.artigosRepo.find({
       select: ['id', 'titulo', 'resumo', 'imagem'],
-      where: { autor: { id: this.request.user.id, } },
-      relations: [ 'autor' ]
+      where: {
+        autor: { id: this.request.user.id, },
+        titulo: Like(`%${titulo}%`),
+      },
+      relations: [ 'autor' ],
     });
   }
 

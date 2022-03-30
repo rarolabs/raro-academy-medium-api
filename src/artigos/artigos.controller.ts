@@ -1,5 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode, UseGuards, Req } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode, UseGuards, Req, Query } from '@nestjs/common';
+import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ArtigosService } from './artigos.service';
 import { CreateArtigoDto } from './dto/create-artigo.dto';
@@ -22,8 +22,14 @@ export class ArtigosController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiResponse({ isArray: true, type: Artigo })
-  findAll(): Promise<Artigo[]> {
-    return this.artigosService.findAll();
+  @ApiQuery({
+    name: 'titulo',
+    type: String,
+    description: 'fragmento do titulo a ser pesquisado',
+    required: false
+  })
+  findAll(@Query('titulo') titulo?: string): Promise<Artigo[]> {
+    return this.artigosService.findAll(titulo);
   }
 
   @Get('meus-artigos')
@@ -31,8 +37,14 @@ export class ArtigosController {
   @ApiResponse({ isArray: true, type: Artigo })
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  findMine(): Promise<Artigo[]> {
-    return this.artigosService.findMine();
+  @ApiQuery({
+    name: 'titulo',
+    type: String,
+    description: 'fragmento do titulo a ser pesquisado',
+    required: false
+  })
+  findMine(@Query('titulo') titulo?: string): Promise<Artigo[]> {
+    return this.artigosService.findMine(titulo);
   }
 
   @Get(':id')
